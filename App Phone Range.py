@@ -22,7 +22,7 @@ st.title('Aplikasi Price Range Phone')
 html_layout1 = """
 <br>
 <div style="background-color:red ; padding:2px">
-<h2 style="color:white;text-align:center;font-size:35px"><b>Diabetes Checkup</b></h2>
+<h2 style="color:white;text-align:center;font-size:35px"><b>Phone Check</b></h2>
 </div>
 <br>
 <br>
