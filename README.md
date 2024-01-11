@@ -1,6 +1,6 @@
 # ** Mobile Price Classification**
 
-Tujuan pembuatan kumpulan data ini semata-mata untuk penggunaan pendidikan, dan penggunaan komersial apa pun dilarang keras dan kumpulan data ini merupakan model bahasa besar yang dihasilkan dan tidak dikumpulkan dari sumber data sebenarnya.
+Dalam proyek ini, saya akan melakukan pengelompokan tanpa pengawasan dan klasifikasi data yang diawasi pada catatan seluler dari database harga seluler.Saya akan membagi data seluler menjadi beberapa segmen untuk mengoptimalkan pentingnya setiap pelanggan bagi bisnis. Untuk memodifikasi produk sesuai dengan kebutuhan dan perilaku pelanggan yang berbeda. Ini juga membantu bisnis untuk memenuhi kekhawatiran berbagai jenis pelanggan.
 
 ## **Technologies Used:**
 
@@ -9,6 +9,7 @@ Tujuan pembuatan kumpulan data ini semata-mata untuk penggunaan pendidikan, dan 
 * Streamlit (Python-Framework)
 * Jupyter Notebook
 * VS Code (IDE)
+* Anaconda
 
 ### For EDA
 * NumPy
@@ -21,6 +22,13 @@ Tujuan pembuatan kumpulan data ini semata-mata untuk penggunaan pendidikan, dan 
 * DecisionTreeClassifier
 * sklearn.tree
 * sklearn
+* StandardScaler
+* SilhouetteVisualizer
+* KMeans
+* sklearn.metrics
+* sklearn.cluster
+* matplotlib.colors
+
 
 ### Deployment
 * GitHub
@@ -30,5 +38,4 @@ Tujuan pembuatan kumpulan data ini semata-mata untuk penggunaan pendidikan, dan 
 * For UI [Streamlit](https://streamlit.io/)
 
 
-## Koreksi 
-* Error (index)
+
