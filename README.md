@@ -21,6 +21,13 @@ Tujuan pembuatan kumpulan data ini semata-mata untuk penggunaan pendidikan, dan 
 * DecisionTreeClassifier
 * sklearn.tree
 * sklearn
+* StandardScaler
+* SilhouetteVisualizer
+* KMeans
+* sklearn.metrics
+* sklearn.cluster
+* matplotlib.colors
+
 
 ### Deployment
 * GitHub
