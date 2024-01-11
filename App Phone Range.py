@@ -1,138 +1,99 @@
 import streamlit as st
-import pandas as pd 
-from PIL import Image 
-import numpy as np 
-import matplotlib.pyplot as plt 
-from sklearn.metrics import accuracy_score
+import pandas as pd
+import plotly.express as px
+import pickle
+import locale
+import warnings
 from sklearn.model_selection import train_test_split
+from sklearn.tree import DecisionTreeClassifier
+from sklearn.metrics import classification_report, confusion_matrix
 
+# Set level warning ke 'ignore' untuk mengabaikan peringatan ini
+warnings.filterwarnings('ignore', category=UserWarning, module='sklearn')
 
-import seaborn as sns 
-import pickle 
+def set_locale():
+    # Set local ke Indonesia
+    locale.setlocale(locale.LC_ALL, 'id_ID')
 
-#import model 
-DTC_model = pickle.load(open('DTC.pkl','rb'))
+try:
+    # Load dataset
+    data = pd.read_csv('Price Range Phone Dataset.csv')
 
-#load dataset
-data = pd.read_csv('Price Range Phone Dataset.csv')
-#data = data.drop(data.columns[0],axis=1)
+    # Pisahkan fitur (X) dan target (y)
+    X = data.drop('price_range', axis=1)
+    y = data['price_range']
 
-st.title('Aplikasi Price Range Phone')
+    # Train-test split
+    X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.20, random_state=42)
 
-html_layout1 = """
-<br>
-<div style="background-color:red ; padding:2px">
-<h2 style="color:white;text-align:center;font-size:35px"><b>Phone Check</b></h2>
-</div>
-<br>
-<br>
-"""
-st.markdown(html_layout1,unsafe_allow_html=True)
-activities = ['DTC','Model Lain']
-option = st.sidebar.selectbox('Pilihan mu ?',activities)
-st.sidebar.header('List Handphone')
+    # Membuat model Decision Tree Classifier
+    decision_tree_model = DecisionTreeClassifier()
+    decision_tree_model.fit(X_train, y_train)
 
-if st.checkbox("Tentang Dataset"):
-    html_layout2 ="""
-    <br>
-    <p>Ini adalah dataset Price Range</p>
-    """
-    st.markdown(html_layout2,unsafe_allow_html=True)
-    st.subheader('Dataset')
-    st.write(data.head(10))
-    st.subheader('Describe dataset')
-    st.write(data.describe())
+    # Melakukan prediksi
+    decision_tree_prediction = decision_tree_model.predict(X_test)
 
-sns.set_style('darkgrid')
+    # Menampilkan confusion matrix dan classification report
+    st.subheader('Confusion Matrix:')
+    st.write(confusion_matrix(y_test, decision_tree_prediction))
 
-if st.checkbox('EDa'):
-    pr =ProfileReport(data,explorative=True)
-    st.header('**Input Dataframe**')
-    st.write(data)
-    st.write('---')
-    st.header('**Profiling Report**')
-    st_profile_report(pr)
-
-#train test split
-X = data.drop('price_range',axis=1)
-y = data['price_range']
-X_train, X_test,y_train,y_test = train_test_split(X,y,test_size=0.20,random_state=42)
-
-#Training Data
-if st.checkbox('Train-Test Dataset'):
-    st.subheader('X_train')
-    st.write(X_train.head())
-    st.write(X_train.shape)
-    st.subheader("y_train")
-    st.write(y_train.head())
-    st.write(y_train.shape)
-    st.subheader('X_test')
-    st.write(X_test.shape)
-    st.subheader('y_test')
-    st.write(y_test.head())
-    st.write(y_test.shape)
-
-def user_report():
-    battery_power = st.sidebar.slider('Ketahanan Baterai',0,20,1)
-    blue = st.sidebar.slider('biru',0,200,108)
-    clock_speed = st.sidebar.slider('kecepatan interaksi',0,140,40)
-    dual_sim = st.sidebar.slider('Dual Sim',0,100,25)
-    fc = st.sidebar.slider('fc',0,1000,120)
-    four_g = st.sidebar.slider('4G',0,80,25)
-    int_memory = st.sidebar.slider('Internal Memori', 0.05,2.5,0.45)
-    m_dep = st.sidebar.slider('Jumlah Memori',21,100,24)
-    mobile_wt = st.sidebar.slider('Mobile watch',21,100,24)
-    n_cores = st.sidebar.slider('Number Core',21,100,24)
-    px_height = st.sidebar.slider('Tinggi',21,100,24)
-    px_width = st.sidebar.slider('Lebar',21,100,24)
-    ramc = st.sidebar.slider('Ram',21,100,24)
-    sc_w = st.sidebar.slider('sc_w',21,100,24)
-    sc_h = st.sidebar.slider('sc_h',21,100,24)
-    three_g = st.sidebar.slider('3G',21,100,24)
-    touch_screen = st.sidebar.slider('Layar Sentuh',21,100,24)
-    wifi = st.sidebar.slider('Wifi',21,100,24)
-
+    st.subheader('Classification Report:')
+    st.write(classification_report(y_test, decision_tree_prediction))
     
-    user_report_data = {
-        'Ketahanan Baterai':battery_power,
-        'biru':blue,
-        'kecepatan interaksi':clock_speed,
-        'Dual Sim': dual_sim,
-        'fc':fc,
-        '4G':four_g,
-        'Internal Memori':int_memory,
-        'Jumlah Memori':m_dep,
-        'Mobile watch': mobile_wt,
-        'Number Core': n_cores,
-        'Tinggi':px_height,
-        'Lebar': px_width,
-        'Ram':ramc,
-        'sc_w':sc_w,
-        'sc_h':sc_h,
-        '3G':three_g,
-        'Layar Sentuh':touch_screen,
-        'Wifi':wifi,
-        
-    }
-    report_data = pd.DataFrame(user_report_data,index=[0])
-    return report_data
+    # Load Decision Tree model
+    decision_tree_model = pickle.load(open('DTC.pkl', 'rb'))
+except Exception as e:
+    st.error(f"Terjadi kesalahan dalam memuat dataset atau model: {e}")
 
-#Data Pasion
-user_data = user_report()
-st.subheader('Data Handphone')
-st.write(user_data)
+# Streamlit App
+set_locale()
+st.title('Aplikasi Prediksi Harga Telepon')
+st.sidebar.header('Input Fitur')
 
-user_result = DTC_model.predict(user_data)
-svc_score = accuracy_score(y_test,DTC_model.predict(X_test))
+def user_input_features():
+    features = {}
+    for column in data.columns:
+        features[column] = st.sidebar.slider(f'{column}', int(data[column].min()), int(data[column].max()), int(data[column].mean()))
+    return pd.DataFrame(features, index=[0])
 
-#output
-st.subheader('Hasilnya adalah : ')
-output=''
-if user_result[0]==0:
-    output='Harga Termurah'
-else:
-    output ='Harga Terendah'
-st.title(output)
-st.subheader('Model yang digunakan : \n'+option)
-st.subheader('Accuracy : ')
-st.write(str(svc_score*100)+'%')
+user_input = user_input_features()
+
+st.subheader('Data Fitur:')
+st.write(user_input)
+
+# Pilih hanya fitur yang digunakan saat melatih model
+selected_features = user_input[['battery_power', 'blue', 'clock_speed', 'dual_sim', 'fc', 'four_g', 'int_memory',
+                                'm_dep', 'mobile_wt', 'n_cores', 'pc', 'px_height', 'px_width', 'ram', 'sc_h', 'sc_w',
+                                'talk_time', 'three_g', 'touch_screen', 'wifi']]
+
+# Prediksi harga dengan model Decision Tree
+decision_tree_prediction = decision_tree_model.predict(selected_features.values)
+
+# Konversi ke format mata uang Rupiah
+formatted_decision_tree_prediction = f"IDR {float(decision_tree_prediction[0]):,.2f}"
+
+# Tampilkan hasil prediksi Decision Tree
+st.subheader('Hasil Prediksi Harga Telepon (Decision Tree):')
+
+# Tampilkan kelas yang diprediksi dalam format mata uang Rupiah
+st.write(f'Harga yang Diprediksi: {formatted_decision_tree_prediction}')
+
+# Informasi tentang dataset
+if st.checkbox("Detail Kumpulan Dataset Fitur Telepon"):
+    st.subheader('Detail Dataset Fitur:')
+    st.write(data)
+    
+    fig = px.pie(data, names='price_range', title='Distribusi Kisaran Harga Telepon')
+    st.plotly_chart(fig)
+
+    st.bar_chart(data['price_range'].value_counts())
+
+    # Line chart untuk menunjukkan tren harga terhadap ram
+    st.subheader('Tren Harga vs RAM:')
+    fig_line = px.line(data, x='ram', y='price_range', title='Tren Harga vs RAM')
+    st.plotly_chart(fig_line)
+
+    # Area chart untuk menunjukkan persebaran harga berdasarkan px_height dan px_width
+    st.subheader('Persebaran Harga berdasarkan Px_Height dan Px_Width:')
+    fig_area = px.area(data, x='px_height', y='px_width', color='price_range', title='Persebaran Harga berdasarkan Px_Height dan Px_Width')
+    st.plotly_chart(fig_area)
