@@ -3,10 +3,15 @@ import pandas as pd
 import plotly.express as px
 import pickle
 import locale
+from sklearn.metrics import accuracy_score
 import warnings
 from sklearn.model_selection import train_test_split
 from sklearn.tree import DecisionTreeClassifier
 from sklearn.metrics import classification_report, confusion_matrix
+
+#Title
+st.title('Aplikasi Prediksi Harga Telepon')
+
 
 # Set level warning ke 'ignore' untuk mengabaikan peringatan ini
 warnings.filterwarnings('ignore', category=UserWarning, module='sklearn')
@@ -47,7 +52,6 @@ except Exception as e:
 
 # Streamlit App
 set_locale()
-st.title('Aplikasi Prediksi Harga Telepon')
 st.sidebar.header('Input Fitur')
 
 def user_input_features():
@@ -97,3 +101,6 @@ if st.checkbox("Detail Kumpulan Dataset Fitur Telepon"):
     st.subheader('Persebaran Harga berdasarkan Px_Height dan Px_Width:')
     fig_area = px.area(data, x='px_height', y='px_width', color='price_range', title='Persebaran Harga berdasarkan Px_Height dan Px_Width')
     st.plotly_chart(fig_area)
+
+
+    
