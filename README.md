@@ -38,5 +38,4 @@ Tujuan pembuatan kumpulan data ini semata-mata untuk penggunaan pendidikan, dan 
 * For UI [Streamlit](https://streamlit.io/)
 
 
-## Koreksi 
-* Error (index)
+
