@@ -9,6 +9,7 @@ Tujuan pembuatan kumpulan data ini semata-mata untuk penggunaan pendidikan, dan 
 * Streamlit (Python-Framework)
 * Jupyter Notebook
 * VS Code (IDE)
+* Anaconda
 
 ### For EDA
 * NumPy
